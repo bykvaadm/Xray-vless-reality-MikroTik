@@ -32,7 +32,7 @@ cat <<EOF > "${XRAY_CONF_PATH}"
       "sniffing": {
         "enabled": true,
         "destOverride": ["http", "tls", "quic"],
-		"routeOnly": true
+        "routeOnly": true
       }
     }
   ],
@@ -55,7 +55,7 @@ cat <<EOF > "${XRAY_CONF_PATH}"
         ]
       },
       "streamSettings": {
-        "network": "tcp",
+        "network": "xhttp",
         "security": "reality",
         "realitySettings": {
           "fingerprint": "$FINGERPRINT_FP",
@@ -63,9 +63,13 @@ cat <<EOF > "${XRAY_CONF_PATH}"
           "publicKey": "$PUBLIC_KEY_PBK",
           "spiderX": "$SPIDERX",
           "shortId": "$SHORT_ID_SID"
+        },
+        "xhttpSettings": {
+          "path": "/",
+          "mode": "auto"
         }
       },
-	  "tag": "proxy"
+      "tag": "proxy"
     }
   ]
 }

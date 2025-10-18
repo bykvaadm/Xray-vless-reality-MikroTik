@@ -6,7 +6,5 @@ FROM alpine:${ALPINE_VERSION}
 COPY --from=xray-core /usr/local/bin/xray /usr/local/bin/xray
 COPY --from=tun2socks /usr/bin/tun2socks /usr/bin/tun2socks
 COPY ./entrypoint.sh /entrypoint.sh
-RUN apk update && apk add --no-cache openrc openresolv iproute2 libqrencode && mkdir -p /usr/local/etc/xray
+RUN apk update && apk add --no-cache openrc openresolv iproute2 libqrencode tcpdump && mkdir -p /usr/local/etc/xray
 ENTRYPOINT ["/entrypoint.sh"]
-
-#-confdir /usr/local/etc/xray/

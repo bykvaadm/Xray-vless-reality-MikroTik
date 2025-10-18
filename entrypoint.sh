@@ -93,5 +93,5 @@ EOF
 echo "Start Xray core"
 /usr/local/bin/xray run -config "${XRAY_CONF_PATH}" &
 echo "Start tun2socks"
-/usr/bin/tun2socks -loglevel "${LOG_LEVEL}" -tcp-sndbuf 3m -tcp-rcvbuf 3m -device tun0 -proxy socks5://127.0.0.1:10800 -interface "${NET_IFACE}" &
+/usr/bin/tun2socks -loglevel "${LOG_LEVEL}" -tcp-sndbuf 3m -tcp-rcvbuf 3m -device tun0 -proxy socks5://127.0.0.1:10800 -interface "${NET_IFACE}"
 echo "Container customization is complete"

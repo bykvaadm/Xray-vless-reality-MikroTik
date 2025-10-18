@@ -3,7 +3,7 @@ XRAY_CONF_PATH="/usr/local/etc/xray/config.json"
 echo "Starting setup container please wait"
 sleep 1
 
-SERVER_IP_ADDRESS="$(nslookup $SERVER_IP_ADDRESS 8.8.8.8 | awk '/Address: / && $2 ~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/ {print $2}' | tail -n1)"
+SERVER_IP_ADDRESS=$(ping -c 1 $SERVER_ADDRESS | awk -F'[()]' '{print $2}')
 NET_IFACE=$(ip -o link show | awk -F': ' '{print $2}' | grep -vE 'lo|tun' | head -n1 | cut -d'@' -f1)
 
 ip tuntap del mode tun dev tun0 || true
@@ -19,7 +19,7 @@ echo "nameserver 172.18.20.5" > /etc/resolv.conf
 cat <<EOF > "${XRAY_CONF_PATH}"
 {
   "log": {
-    "loglevel": "silent"
+    "loglevel": "$LOG_LEVEL"
   },
   "inbounds": [
     {
@@ -75,9 +75,8 @@ cat <<EOF > "${XRAY_CONF_PATH}"
 }
 EOF
 
-#TODO
 echo "Start Xray core"
 /usr/local/bin/xray run -config "${XRAY_CONF_PATH}" &
 echo "Start tun2socks"
-/usr/bin/tun2socks -loglevel silent -tcp-sndbuf 3m -tcp-rcvbuf 3m -device tun0 -proxy socks5://127.0.0.1:10800 -interface "${NET_IFACE}" &
+/usr/bin/tun2socks -loglevel "${LOG_LEVEL}" -tcp-sndbuf 3m -tcp-rcvbuf 3m -device tun0 -proxy socks5://127.0.0.1:10800 -interface "${NET_IFACE}" &
 echo "Container customization is complete"
